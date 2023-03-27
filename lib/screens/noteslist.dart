@@ -84,6 +84,15 @@ class _ScrollableNotesListState extends ConsumerState<ScrollableNotesList> {
     final notes = ref.watch(noteStreamProvider);
     int notesLength = (notes.hasValue) ? notes.value!.length : 0;
 
+    if (notes.isLoading) {
+      return const Center(
+          child: SizedBox(
+        height: 50,
+        width: 50,
+        child: CircularProgressIndicator.adaptive(value: null),
+      ));
+    }
+
     // Main list view
     return ReorderableListView.builder(
         scrollDirection: Axis.vertical,

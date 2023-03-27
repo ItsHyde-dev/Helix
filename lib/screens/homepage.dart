@@ -41,12 +41,19 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color.fromARGB(255, 53, 53, 53), Colors.black])),
-        child: const Scaffold(body: NotesList()));
+    try {
+      return Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color.fromARGB(255, 53, 53, 53), Colors.black])),
+          child: const Scaffold(body: NotesList()));
+    } catch (error) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.toString())));
+
+      return const CircularProgressIndicator.adaptive();
+    }
   }
 }
