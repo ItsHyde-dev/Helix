@@ -32,6 +32,7 @@ dependencies:
   assets_audio_player: ^3.0.6
   cloud_firestore: ^4.4.3
   cupertino_icons: ^1.0.2
+  device_info_plus: ^8.1.0
   file_picker: ^5.2.5
   firebase_core: ^2.7.0
   flutter:
@@ -39,7 +40,6 @@ dependencies:
   flutter_riverpod: ^2.2.0
   flutter_slidable: ^2.0.0
   path_provider: ^2.0.13
-  platform_device_id: ^1.0.1
   syncfusion_flutter_sliders: ^20.4.54
 
 dev_dependencies:

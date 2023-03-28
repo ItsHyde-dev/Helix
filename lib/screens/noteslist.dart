@@ -81,7 +81,7 @@ class ScrollableNotesList extends ConsumerStatefulWidget {
 class _ScrollableNotesListState extends ConsumerState<ScrollableNotesList> {
   @override
   Widget build(BuildContext context) {
-    final notes = ref.watch(noteStreamProvider);
+    var notes = ref.watch(noteStreamProvider);
     int notesLength = (notes.hasValue) ? notes.value!.length : 0;
 
     if (notes.isLoading) {
@@ -94,27 +94,32 @@ class _ScrollableNotesListState extends ConsumerState<ScrollableNotesList> {
     }
 
     // Main list view
-    return ReorderableListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: notesLength,
-        onReorderStart: (_) {
-          FocusScope.of(context).unfocus();
-        },
-        onReorder: (oldIndex, newIndex) {
-          setState(() {});
-          fo.reorderItems(oldIndex, newIndex);
-          ref.read(musicTileProvider.notifier).reorderTiles(oldIndex, newIndex);
-        },
-        buildDefaultDragHandles: true,
-        itemBuilder: (context, index) {
-          // adding padding to the view
-          return Padding(
-            key: ValueKey(notes.value![index].id),
-            padding:
-                const EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 5),
-            child: MusicPlayerTile(index: index),
-          );
-        });
+    return RefreshIndicator(
+      onRefresh: () {
+        notes = ref.watch(noteStreamProvider);
+        return Future(() => null);
+      },
+      child: ReorderableListView.builder(
+          scrollDirection: Axis.vertical,
+          itemCount: notesLength,
+          onReorder: (oldIndex, newIndex) {
+            setState(() {});
+            fo.reorderItems(oldIndex, newIndex);
+            ref
+                .read(musicTileProvider.notifier)
+                .reorderTiles(oldIndex, newIndex);
+          },
+          buildDefaultDragHandles: true,
+          itemBuilder: (context, index) {
+            // adding padding to the view
+            return Padding(
+              key: ValueKey(notes.value![index].id),
+              padding:
+                  const EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 5),
+              child: MusicPlayerTile(index: index),
+            );
+          }),
+    );
   }
 
   Future<File> saveFileToAppDirectory(PlatformFile file) async {

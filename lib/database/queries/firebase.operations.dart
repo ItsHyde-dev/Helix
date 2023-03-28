@@ -1,5 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:platform_device_id/platform_device_id.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -114,7 +116,18 @@ class FirebaseOperations {
   }
 
   Future<void> updatePath({path, docId}) async {
-    String? deviceId = await PlatformDeviceId.getDeviceId;
+    String? deviceId;
+    final DeviceInfoPlugin info = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await info.androidInfo;
+      deviceId = androidInfo.id;
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await info.iosInfo;
+      deviceId = iosInfo.identifierForVendor;
+    } else if (Platform.isMacOS) {
+      MacOsDeviceInfo macInfo = await info.macOsInfo;
+      deviceId = macInfo.hostName;
+    }
 
     if (deviceId != null && deviceId.isNotEmpty) {
       noteRef.doc(docId).set({

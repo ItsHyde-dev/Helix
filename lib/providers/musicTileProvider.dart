@@ -45,7 +45,7 @@ class MusicTileNotifier extends StateNotifier<List<MusicTileData>> {
         state[i]
             .assetsAudioPlayer
             .open(
-              Audio.file(tiles[i].path, metas: Metas(title: tiles[i].title)),
+              Audio.file(tiles[i].path!, metas: Metas(title: tiles[i].title)),
               autoStart: false,
               showNotification: true,
               loopMode: LoopMode.single,

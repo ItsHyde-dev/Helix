@@ -1,8 +1,10 @@
 // ignore_for_file: file_names
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import 'package:write_by_hyde/providers/musicTileProvider.dart';
 
 FirebaseFirestore database = FirebaseFirestore.instance;
@@ -13,8 +15,14 @@ final noteStreamProvider = StreamProvider<List<NoteStruct>>((ref) {
   List<NoteStruct> prev = [];
 
   String? deviceId;
-
-  PlatformDeviceId.getDeviceId.then((value) => deviceId = value);
+  final DeviceInfoPlugin info = DeviceInfoPlugin();
+  if (Platform.isAndroid) {
+    info.androidInfo.then((value) => deviceId = value.id);
+  } else if (Platform.isIOS) {
+    info.iosInfo.then((value) => deviceId = value.identifierForVendor);
+  } else if (Platform.isMacOS) {
+    info.macOsInfo.then((value) => deviceId = value.hostName);
+  }
 
   final data = noteRef.snapshots().map((e) {
     List<NoteStruct> noteList = <NoteStruct>[];
@@ -44,8 +52,6 @@ final noteStreamProvider = StreamProvider<List<NoteStruct>>((ref) {
           }
         }
 
-        // handle elements deleted
-
         ref.read(musicTileProvider.notifier).removeTiles(deletedIndexes);
       } else {
         //CASE: element added
@@ -66,6 +72,8 @@ final noteStreamProvider = StreamProvider<List<NoteStruct>>((ref) {
 
     prev = noteList;
 
+    // print(noteList);
+
     return noteList;
   });
 
@@ -77,7 +85,7 @@ class NoteStruct {
   String id;
   String note;
   String title;
-  String path;
+  String? path;
 
   NoteStruct(this.index, this.id, this.note, this.title, this.path);
 }
