@@ -18,9 +18,12 @@ class Homepage extends StatelessWidget {
                       color: Colors.white54,
                       fontSize: 12,
                       fontStyle: FontStyle.italic),
-                  bodyLarge: TextStyle(color: Colors.white, fontSize: 30),
+                  bodyLarge: TextStyle(
+                      color: Colors.white,
+                      fontSize: 35,
+                      fontFamily: 'Fasthand'),
                   bodyMedium: TextStyle(
-                      color: Colors.white70,
+                      color: Color.fromARGB(255, 255, 255, 255),
                       fontSize: 16,
                       fontWeight: FontWeight.bold)),
               inputDecorationTheme: const InputDecorationTheme(
@@ -44,10 +47,11 @@ class Home extends StatelessWidget {
     try {
       return Container(
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color.fromARGB(255, 53, 53, 53), Colors.black])),
+              // gradient: LinearGradient(
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter,
+              //     colors: [Color.fromARGB(255, 53, 53, 53), Colors.black])
+              ),
           child: const Scaffold(body: NotesList()));
     } catch (error) {
       ScaffoldMessenger.of(context)

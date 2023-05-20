@@ -13,6 +13,7 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:write_by_hyde/database/queries/firebase.operations.dart';
 import 'package:write_by_hyde/providers/musicTileProvider.dart';
 import 'package:write_by_hyde/providers/noteProvider.dart';
+import 'dart:math' as math;
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -29,6 +30,15 @@ class MusicPlayerTile extends ConsumerStatefulWidget {
 }
 
 class _MusicPlayerTileState extends ConsumerState<MusicPlayerTile> {
+  static const musicIconColors = [
+    Colors.green,
+    Colors.blue,
+    Colors.pink,
+    Colors.purple,
+    Colors.amber,
+    Colors.white
+  ];
+
   @override
   Widget build(BuildContext context) {
     // return a music player tile widget that will have details from the given index of the provider
@@ -44,57 +54,45 @@ class _MusicPlayerTileState extends ConsumerState<MusicPlayerTile> {
     bool isPlaying = ref.watch(musicTileProvider)[index].isPlaying;
     double sliderMaxValue = ref.watch(musicTileProvider)[index].sliderMaxValue;
 
-    return Column(
-      children: [
-        // Divider
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10.0, top: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 0.5,
-                width: 100,
-                color: Colors.white24,
-              ),
-              const Icon(
-                Icons.drag_handle_rounded,
-                color: Colors.white38,
-              ),
-              Container(
-                height: 0.5,
-                width: 100,
-                color: Colors.white24,
-              )
-            ],
-          ),
-        ),
-
-        Slidable(
-          startActionPane: ActionPane(motion: const ScrollMotion(), children: [
-            // delete button
-            SlidableAction(
-              onPressed: (context) {
-                fo.deleteNote(noteData.id);
-              },
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              icon: Icons.delete,
-              label: 'Delete',
-            )
-          ]),
+    return Slidable(
+      startActionPane: ActionPane(motion: const ScrollMotion(), children: [
+        // delete button
+        SlidableAction(
+          onPressed: (context) {
+            fo.deleteNote(noteData.id);
+          },
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.red,
+          icon: Icons.delete,
+          label: 'Delete',
+        )
+      ]),
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: const Color.fromARGB(6, 255, 255, 255)),
+            color: const Color.fromARGB(35, 255, 255, 255),
+            borderRadius: BorderRadius.circular(45)),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(18, 20, 20, 20),
           child: Column(
             children: [
               // TITLE ROW
 
               Padding(
-                padding: const EdgeInsets.only(left: 15.0, bottom: 8),
+                padding: const EdgeInsets.only(left: 5),
                 child: Align(
                     alignment: Alignment.topLeft,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: Icon(Icons.music_note_rounded,
+                              color: musicIconColors[
+                                  index % musicIconColors.length]),
+                        ),
+
                         // TITLE
                         Expanded(
                           child: TextField(
@@ -201,7 +199,8 @@ class _MusicPlayerTileState extends ConsumerState<MusicPlayerTile> {
               ),
               // Player Row
               Padding(
-                  padding: const EdgeInsets.only(right: 15),
+                  padding:
+                      const EdgeInsets.only(right: 15, bottom: 8, left: 10),
                   child: Row(
                     children: [
                       // Play Button
@@ -217,7 +216,7 @@ class _MusicPlayerTileState extends ConsumerState<MusicPlayerTile> {
                           },
                           child: Icon(
                             (!isPlaying) ? Icons.play_arrow : Icons.pause,
-                            color: !isPlaying ? Colors.white : Colors.blue[100],
+                            color: !isPlaying ? Colors.white : Colors.white,
                           )),
 
                       // Player
@@ -238,7 +237,10 @@ class _MusicPlayerTileState extends ConsumerState<MusicPlayerTile> {
                                         .seek(Duration(seconds: val.toInt()));
                                   },
 
-                                  activeColor: Colors.white70,
+                                  activeColor:
+                                      const Color.fromARGB(222, 255, 255, 255),
+                                  inactiveColor:
+                                      const Color.fromARGB(97, 217, 0, 255),
                                   // inactiveColor:
                                   //     const Color.fromARGB(82, 255, 255, 255),
                                 ),
@@ -379,7 +381,7 @@ class _MusicPlayerTileState extends ConsumerState<MusicPlayerTile> {
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

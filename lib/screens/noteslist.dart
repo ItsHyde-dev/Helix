@@ -18,10 +18,6 @@ class NotesList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // return a list of notes that you fetch from the backend.
-    // if the music is available locally then use the local file to play it
-    // otherwise use the online file to stream the music
-
     return Scaffold(
         body: SafeArea(
       child: Column(
@@ -33,25 +29,28 @@ class NotesList extends ConsumerWidget {
             fit: FlexFit.tight,
             child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              child: Stack(
+                // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.center,
                     child: Text(
-                      "Notes",
+                      "Helix",
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
 
                   // ANCHOR: ADD NOTES
-                  GestureDetector(
-                    onTap: () => fo.addNote(),
-                    child: const Icon(
-                      Icons.edit_note,
-                      size: 40,
-                    ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                        onPressed: () => fo.addNote(),
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.center,
+                        icon: const Icon(
+                          Icons.edit_note,
+                          size: 40,
+                        )),
                   )
                 ],
               ),
